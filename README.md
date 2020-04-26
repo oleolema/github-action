@@ -1,28 +1,33 @@
 要想使用Github action 一键自动部署 需要准备以下东西
 
 1.  [注册阿里云容器镜像服务](https://cr.console.aliyun.com/cn-shanghai/instances/repositories)
-2. 一台与外网连通的linxu服务器
+2. 一台与外网连通的Linux服务器
 
 首先到阿里云容器镜像服务中新建镜像仓库
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200425153904702.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE5MjY2NjY5,size_16,color_FFFFFF,t_70)
+
 我们使用本地仓库
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200425173444728.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE5MjY2NjY5,size_16,color_FFFFFF,t_70)
 
 
-创建成功后进入仓库, 复制红色框内的仓库地址(空格后, 冒号前)
+创建成功后进入仓库, 复制红色框内的仓库地址(空格后, 冒号前)  
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200425154332658.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE5MjY2NjY5,size_16,color_FFFFFF,t_70)
+
 然后进入github仓库
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200425154808116.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE5MjY2NjY5,size_16,color_FFFFFF,t_70)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200425154835990.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE5MjY2NjY5,size_16,color_FFFFFF,t_70)
+
 添加下面这些变量, 注意变量名不要写错了, (这里的服务器指的是 你将要部署项目的linux服务器), 大家放心 这些密码一旦保存后都是不可见的, 整个部署阶段都是安全的
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200425155103264.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE5MjY2NjY5,size_16,color_FFFFFF,t_70)
-接下来就是敲代码了
-在你的项目的下面路径中添加两个文件 , 注意路径不要错了
-`./.github/workflows/maven.yml`
-`./Dockerfile`
+
+接下来就是敲代码了  
+在你的项目的下面路径中添加两个文件 , 注意路径不要错了  
+`./.github/workflows/maven.yml`  
+`./Dockerfile`  
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/202004251600494.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE5MjY2NjY5,size_16,color_FFFFFF,t_70)
 
 先说一下持续部署流程, 我们将代码提交到github上后, 会触发github action, github action用他们的ubuntu服务器按照 `./.github/workflows/maven.yml` 中的配置 运行我们指定的任务. 我们在任务里编译打包并读取`./Dockerfile` 生成一个docker镜像, 任务会将docker镜像传到你的阿里云docker仓库中 (这样的好处是, 以后每个版本的镜像都能在阿里云找到, 不用耗费本地资源). 接着的任务会自动登录你的服务器, 向阿里云拉取该镜像, 并运行该镜像.  
+
 整个流程可能有点费时 (一般在十分钟之内可以完成), 但都是在你提交代码后自动完成的,  你一般不需要关心它的部署过程, 解决了重复部署项目这样的无聊操作
 
 确保你的服务器已经安装了docker, 安装比较简单, 没有安装可以百度
@@ -120,10 +125,10 @@ CMD java -jar app.jar
 
 这样的工具有很多, 为什么我选择github action 呢, 因为我感觉他比较快, 
 如果你在部署过程遇到了问题, 或者想尝试其他方案, 可以试试下面的工具
-比如 :  
-[travis](https://www.travis-ci.org/)   (速度还行)
-[daocloud](https://dashboard.daocloud.io/build-flows)  (速度一般, 中文, 界面管理 ,可以快速上手,操作简单)
-[jenkins](https://www.jenkins.io/zh/) (本地运行, 速度取决于你钱包的厚度)
+比如 :    
+[travis](https://www.travis-ci.org/)   (速度还行)  
+[daocloud](https://dashboard.daocloud.io/build-flows)  (速度一般, 中文, 界面管理 ,可以快速上手,操作简单)  
+[jenkins](https://www.jenkins.io/zh/) (本地运行, 速度取决于你钱包的厚度)  
 
 
 
